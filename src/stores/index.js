@@ -1,5 +1,6 @@
 import { defineStore } from '#q-app/wrappers'
 import { createPinia } from 'pinia'
+import { useRouter } from 'vue-router'
 
 /*
  * If not building with SSR mode, you can
@@ -15,6 +16,9 @@ export default defineStore((/* { ssrContext } */) => {
 
   // You can add Pinia plugins here
   // pinia.use(SomePiniaPlugin)
+  pinia.use( ({ store }) => {
+    store.router = useRouter();
+  })
 
   return pinia
 })
