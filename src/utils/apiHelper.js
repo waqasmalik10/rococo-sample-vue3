@@ -29,7 +29,7 @@ export async function handleAuthRequest(store, requestFn, router) {
 
   localStorageService.setItem('user', person);
   localStorageService.setItem('accessToken', access_token);
-  localStorageService.setItem('accessTokenExpiry', access_token);
+  localStorageService.setItem('accessTokenExpiry', expiry);
 
   router.push('/dashboard');
 

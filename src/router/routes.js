@@ -3,7 +3,10 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'dashboard', component: () => import('pages/IndexPage.vue'), meta: { requiresAuth: true } }
+      { path: 'dashboard', component: () => import('pages/IndexPage.vue'), meta: { requiresAuth: true } },
+      { path: 'todo', component: () => import('pages/TodoPage.vue'), meta: { requiresAuth: true } },
+      { path: 'profile', component: () => import('pages/ProfilePage.vue'), meta: { requiresAuth: true } },
+      { path: '', redirect: '/dashboard' }
     ]
   },
 

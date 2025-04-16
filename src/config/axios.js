@@ -14,10 +14,32 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
   const authStore = useAuthStore();
   if (authStore.isAuthenticated) {
-    config.headers.Authorization = `Bearer ${authStore.user.token}`;
+    if (authStore.accessToken) {
+      config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+    } else {
+      console.warn('Auth token is missing but isAuthenticated is true');
+    }
   }
   return config;
 });
-  
+
+// Add a response interceptor to handle common errors
+apiClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    console.error('API Error:', error.message);
+
+    // If we get a 401, clear auth and redirect to login
+    if (error.response && error.response.status === 401) {
+      const authStore = useAuthStore();
+      console.warn('Received 401 unauthorized, clearing authentication');
+      authStore.logout();
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default apiClient;

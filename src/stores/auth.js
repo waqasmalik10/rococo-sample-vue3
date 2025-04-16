@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
     async signup(payload) {
       let response
       try {
-        response = await axios.post('/auth/signup', payload);        
+        response = await axios.post('/auth/signup', payload);
       } catch {
         Notify.create({
           message: "An unknown error occurred",
@@ -60,6 +60,12 @@ export const useAuthStore = defineStore('auth', {
       );
     },
 
+    async forgotPassword(payload) {
+      return handleAuthRequest(this, () =>
+        axios.post('/auth/forgot_password', payload), this.router
+      );
+    },
+
     async logout() {
       localStorageService.clear()
       this.user = null;
@@ -67,6 +73,50 @@ export const useAuthStore = defineStore('auth', {
       this.accessTokenExpiry = null;
       this.router.push('/login')
     },
+
+    async updateProfile(payload) {
+      try {
+        const response = await axios.put('/person/me', payload);
+
+        if (response.data?.success) {
+          // Update the user object in our state
+          this.user = response.data.person;
+
+          // Update in localStorage
+          localStorageService.setItem('user', this.user);
+
+          Notify.create({
+            message: "Profile updated successfully",
+            color: "positive"
+          });
+
+          return true;
+        } else {
+          Notify.create({
+            message: response.data?.message || "Failed to update profile",
+            color: "negative"
+          });
+          return false;
+        }
+      } catch (error) {
+        console.error('Profile update error:', error);
+        // If this is an auth error, redirect to login
+        if (error.response && error.response.status === 401) {
+          Notify.create({
+            message: "Your session has expired. Please log in again.",
+            color: "negative"
+          });
+          this.logout();
+          return false;
+        }
+
+        Notify.create({
+          message: error.response?.data?.message || "An error occurred while updating your profile",
+          color: "negative"
+        });
+        return false;
+      }
+    }
   }
 })
 

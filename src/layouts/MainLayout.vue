@@ -20,6 +20,9 @@
           <q-icon size="xs" name="arrow_drop_down" />
           <q-menu fir anchor="bottom right" self="top right">
             <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup to="/profile">
+                <q-item-section>Profile</q-item-section>
+              </q-item>
               <q-item clickable v-close-popup>
                 <q-item-section @click="authStore.logout()">Logout</q-item-section>
               </q-item>
@@ -55,6 +58,16 @@ const linksList = [
     title: 'Dashboard',
     icon: 'code',
     link: '/dashboard',
+  },
+  {
+    title: 'Todo App',
+    icon: 'check_box',
+    link: '/todo',
+  },
+  {
+    title: 'Profile',
+    icon: 'person',
+    link: '/profile',
   },
 ]
 
